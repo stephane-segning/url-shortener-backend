@@ -4,8 +4,11 @@ import { AbstractEntity } from '@/shared/abstract.entity';
 
 @Entity({ name: 'oauth2_clients' })
 export class Oauth2ClientEntity extends AbstractEntity {
-  @Column({ name: 'secret', nullable: true })
-  secret!: string;
+  @Column({ name: 'client_id', nullable: true })
+  clientId!: string;
+
+  @Column({ name: 'client_secret', nullable: true })
+  clientSecret!: string;
 
   @Column({ name: 'redirect_uris', type: 'simple-array' })
   redirectUris!: string[];
@@ -33,8 +36,4 @@ export class Oauth2ClientEntity extends AbstractEntity {
 
   @OneToMany(() => OAuth2TokenEntity, (token) => token.client)
   tokens: OAuth2TokenEntity[];
-
-  get clientId(): string {
-    return this.id!;
-  }
 }

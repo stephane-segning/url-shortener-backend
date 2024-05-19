@@ -1,0 +1,8 @@
+{
+  "type": "sqlite",
+  "database": "gettingstarted.db",
+  "autoLoadEntities": true,
+  "synchronize": true,
+  "logging": false,
+  "entityPrefix": "urs_"
+}

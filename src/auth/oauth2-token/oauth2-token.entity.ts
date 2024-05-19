@@ -8,20 +8,17 @@ export class OAuth2TokenEntity extends AbstractEntity {
   @Column({ name: 'access_token' })
   accessToken!: string;
 
-  @Column({ name: 'access_token_expires_at' })
+  @Column({ name: 'access_token_expires_at', type: 'bigint' })
   accessTokenExpiresAt!: number;
 
   @Column({ name: 'refresh_token', nullable: true })
   refreshToken?: string;
 
-  @Column({ name: 'refresh_token_expires_at', nullable: true })
+  @Column({ name: 'refresh_token_expires_at', nullable: true, type: 'bigint' })
   refreshTokenExpiresAt?: number;
 
   @Column({ name: 'scopes', type: 'simple-array' })
   scope!: string[];
-
-  @Column()
-  active!: boolean;
 
   @ManyToOne(() => Oauth2ClientEntity, (client) => client.tokens)
   @JoinColumn({ name: 'client_id' })

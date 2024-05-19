@@ -13,22 +13,40 @@ import { Logger } from '@nestjs/common';
     return {};
   },
 })
-@ObjectType('CodeItem')
-export class CodesDto {
+@ObjectType('Oauth2Client')
+export class Oauth2ClientDto {
   @IDField(() => ID)
   id!: string;
 
   @FilterableField()
-  smallCode!: string;
+  clientId!: string;
 
   @FilterableField()
-  active!: boolean;
+  clientSecret!: string;
 
-  @Field({ nullable: true })
-  customScript?: string | undefined;
+  @Field(() => [String])
+  redirectUris!: string[];
 
-  @FilterableField({ nullable: true })
-  redirectUrl?: string | undefined;
+  @Field(() => [String])
+  grants!: string[];
+
+  @Field(() => [String])
+  scopes!: string[];
+
+  @FilterableField()
+  name!: string;
+
+  @FilterableField()
+  description!: string;
+
+  @FilterableField()
+  accessTokenLifetime!: number;
+
+  @FilterableField()
+  refreshTokenLifetime!: number;
+
+  @FilterableField()
+  disabled!: boolean;
 
   @Field(() => GraphQLISODateTime)
   created!: Date;

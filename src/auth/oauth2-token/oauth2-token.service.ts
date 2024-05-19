@@ -16,10 +16,11 @@ export class Oauth2TokenService {
   }
 
   public async getAccessToken(accessToken: string): Promise<OAuth2TokenEntity> {
-    return this.repository.findOneOrFail({
+    return this.repository.findOne({
       where: {
         accessToken,
       },
+      relations: ['user', 'client'],
     });
   }
 
@@ -36,10 +37,17 @@ export class Oauth2TokenService {
   public async getRefreshToken(
     refreshToken: string,
   ): Promise<OAuth2TokenEntity> {
-    return this.repository.findOneOrFail({
+    const found = await this.repository.findOne({
       where: {
         refreshToken,
       },
+      relations: ['user', 'client'],
     });
+
+    if (!found) {
+      return null;
+    }
+
+    return found;
   }
 }

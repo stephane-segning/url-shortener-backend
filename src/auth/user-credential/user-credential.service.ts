@@ -18,6 +18,9 @@ export class UserCredentialService {
   public async comparePassword(userId: string, challenge: string) {
     this.logger.debug(`Comparing password for user ${userId}`);
     const credential = await this.findUserPassword(userId);
+    if (!credential) {
+      return false;
+    }
     return bcrypt.compare(challenge, credential.privateData[this.passwordKey]);
   }
 
@@ -46,11 +49,17 @@ export class UserCredentialService {
 
   private async findUserPassword(userId: string) {
     this.logger.debug(`Finding password for user ${userId}`);
-    return this.repository.findOneOrFail({
+    const userCred = await this.repository.findOne({
       where: {
         user_id: userId,
         type: 'password',
       },
     });
+
+    if (!userCred) {
+      return null;
+    }
+
+    return userCred;
   }
 }

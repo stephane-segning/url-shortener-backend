@@ -45,18 +45,18 @@ async function bootstrap(port = process.env.PORT ?? 3000) {
     helmet({
       contentSecurityPolicy: {
         directives: {
-          defaultSrc: ['\'self\''],
-          scriptSrc: ['\'self\'', '\'unsafe-inline\'', 'https://cdn.jsdelivr.net'],
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net'],
           styleSrc: [
-            '\'self\'',
-            '\'unsafe-inline\'',
+            "'self'",
+            "'unsafe-inline'",
             'https://cdn.jsdelivr.net',
             'https://fonts.googleapis.com',
           ],
-          imgSrc: ['\'self\'', 'data:', 'https://cdn.jsdelivr.net'],
-          connectSrc: ['\'self\'', 'https://cdn.jsdelivr.net'],
+          imgSrc: ["'self'", 'data:', 'https://cdn.jsdelivr.net'],
+          connectSrc: ["'self'", 'https://cdn.jsdelivr.net'],
           fontSrc: [
-            '\'self\'',
+            "'self'",
             'https://cdn.jsdelivr.net',
             'https://fonts.googleapis.com',
           ],
@@ -67,12 +67,13 @@ async function bootstrap(port = process.env.PORT ?? 3000) {
 
   await app.listen(port);
 
-  const urls = await Promise.all([app.getUrl(), `http://localhost:${port}`])
+  const urls = await Promise.all([app.getUrl(), `http://localhost:${port}`]);
 
   logger.log(`>> Application is running on: ${await app.getUrl()}`);
   urls.forEach((url) => {
     logger.log(`>> Swagger is running on: ${url}/swagger`);
     logger.log(`>> GraphQL is running on: ${url}/graphql`);
+    logger.log(`>> Metrics is running on: ${url}/metrics`);
   });
 }
 

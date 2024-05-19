@@ -11,7 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import OAuth2Server from 'oauth2-server';
 import { Response } from 'express';
-import { fromOauthToken, RegisterAccount } from './types';
+import { fromOauthToken, Public, RegisterAccount } from './types';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')
@@ -22,6 +22,7 @@ export class AuthController {
     private readonly oauth2Server: OAuth2Server,
   ) {}
 
+  @Public()
   @HttpCode(200)
   @Post('token')
   async token(@Req() req: Request, @Res() res: Response) {
@@ -43,6 +44,7 @@ export class AuthController {
     res.send(fromOauthToken(token));
   }
 
+  @Public()
   @HttpCode(201)
   @Post('register')
   async registerAccount(@Body() input: RegisterAccount) {

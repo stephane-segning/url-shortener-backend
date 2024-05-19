@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import {
   BaseModel,
   Client,
-  ExtensionModel,
   Falsey,
   PasswordModel,
   RefreshToken,
@@ -22,7 +21,7 @@ import { OAuth2TokenEntity } from './oauth2-token/oauth2-token.entity';
 
 @Injectable()
 export class OauthModelService
-  implements BaseModel, ExtensionModel, RefreshTokenModel, PasswordModel
+  implements BaseModel, RefreshTokenModel, PasswordModel
 {
   constructor(
     private readonly authService: AuthService,
@@ -59,6 +58,7 @@ export class OauthModelService
     refreshToken: string,
   ): Promise<Falsey | RefreshToken> {
     const found = await this.tokenService.getRefreshToken(refreshToken);
+    if (!found) return false;
     return (await this.convertToOauthToken(found)) as RefreshToken;
   }
 
@@ -69,6 +69,7 @@ export class OauthModelService
 
   public async getAccessToken(accessToken: string): Promise<Falsey | Token> {
     const found = await this.tokenService.getAccessToken(accessToken);
+    if (!found) return false;
     return (await this.convertToOauthToken(found)) as Token;
   }
 
@@ -100,7 +101,9 @@ export class OauthModelService
     clientId: string,
     clientSecret: string,
   ): Promise<Client | Falsey> {
-    return this.clientService.findFirst(clientId, clientSecret);
+    const client = await this.clientService.findFirst(clientId, clientSecret);
+    if (!client) return false;
+    return client;
   }
 
   public async saveToken(
@@ -186,7 +189,11 @@ export class OauthModelService
   }
 
   private async getLastPrismaKeyPrivateKey(): Promise<[string, Algorithm]> {
-    const { privateData } = await this.keyService.findLast();
+    const found = await this.keyService.findLast();
+    if (!found) {
+      throw new InternalServerErrorException('No active key found');
+    }
+    const { privateData } = found;
     return [privateData.privateKey as string, privateData.algo as Algorithm];
   }
 }

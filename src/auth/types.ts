@@ -1,6 +1,7 @@
 import type { Token } from 'oauth2-server';
 import { IsDefined, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { SetMetadata } from '@nestjs/common';
 
 export class AppToken {
   constructor(
@@ -33,3 +34,6 @@ export class RegisterAccount {
   @ApiProperty()
   password: string;
 }
+
+export const IS_PUBLIC_KEY = 'isPublic';
+export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);

@@ -35,5 +35,6 @@ import { UsersModule } from '@/users/users.module';
     UserCredentialModule,
     UsersModule,
   ],
+  exports: [OAuth2Server],
 })
 export class AuthModule {}
