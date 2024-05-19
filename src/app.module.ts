@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { ConfigModule } from '@nestjs/config';
     UsersModule,
     CodesModule,
     AuthModule,
+    HealthModule,
   ],
 })
 export class AppModule {}

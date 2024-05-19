@@ -27,18 +27,26 @@ export class RedirectController {
     @Res() res: Response,
   ) {
     this.logger.debug(`Redirecting using code ${codeId}`);
-    const { isRedirect, redirectUrl, render } = await this.service.redirect({
-      codeId,
-      host,
-      userAgent: req.useragent,
-      lookup: lookup(req.clientIp),
-    });
+    const { isRedirect, redirectUrl, render, status } =
+      await this.service.redirect({
+        codeId,
+        host,
+        userAgent: req.useragent,
+        lookup: lookup(req.clientIp),
+        cookies: req.cookies
+      });
+
     if (isRedirect) {
+      this.logger.debug(`Redirecting to ${redirectUrl}`);
       return res.redirect(redirectUrl);
     }
+
     if (render) {
-      return res.render(render);
+      this.logger.debug(`Rendering "${render}" with code "${codeId}"`);
+      return res.status(status).render(render, { codeId });
     }
-    return res.render('no-code');
+
+    this.logger.debug(`No redirect found for code ${codeId}`);
+    return res.status(404).render('no-code', { codeId });
   }
 }
